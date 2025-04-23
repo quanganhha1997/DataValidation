@@ -1,4 +1,7 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statistics
 
 # Load the data
 df = pd.read_csv('employees.csv')
@@ -36,6 +39,11 @@ duplicate_phones = df['phone'].duplicated(keep=False) & df['phone'].notnull()
 # Summary Assertion: each city has more than one emplyee
 city_counts = df['city'].value_counts()
 
+# Summary Assertion: each manager supervises at least 2 employees
+manager_counts = df['reports_to'].value_counts()
+
+# Statistical Assertion: the salaries are normally distributed
+salaries = df['salary'].dropna() # drop null values
 
 # Count invalid records
 null_name_count = null_name_records.sum()
@@ -47,10 +55,18 @@ invalid_birth_before_1940_count = invalid_birth_before_1940.sum()
 invalid_manager_count = invalid_manager_records.sum()
 invalid_phone_dup_count = duplicate_phones.sum()
 invalid_cities_with_one_employee = city_counts[city_counts == 1].sum()
+managers_with_one_report = manager_counts[manager_counts == 1].sum()
 
-
-# Is the dataset valid overall?
-is_valid_summary = invalid_cities_with_one_employee.empty
+# Generate a histogram of salaries
+plt.figure(figsize=(8, 5))
+sns.histplot(salaries, kde=True, bins=20)
+plt.title('Salary Distribution')
+plt.xlabel('Salary')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("salary_distribution.png")
+plt.show()
 
 # Print results
 print(f"Number of null fields in column 'name': {null_name_count}")
@@ -64,4 +80,7 @@ print(f"Number of records that violate the manager must be a known employee asse
 print(f"Number of records that violate the unique phone number assertion: {invalid_phone_dup_count}")
 print(f"Number of records that violate the cities has more than only one employee assertion: {invalid_cities_with_one_employee}")
 #print(invalid_phones)
+
+# Print result
+print(f"Number of managers with only one employee reporting to them: {managers_with_one_report}")
 
