@@ -58,11 +58,11 @@ invalid_cities_with_one_employee = city_counts[city_counts == 1].sum()
 managers_with_one_report = manager_counts[manager_counts == 1].sum()
 
 # Generate a histogram of salaries
-plt.figure(figsize=(8, 5))
-sns.histplot(salaries, kde=True, bins=20)
+plt.figure(figsize=(10, 6))
+sns.histplot(data=salaries, bins=30, kde=True)
 plt.title('Salary Distribution')
 plt.xlabel('Salary')
-plt.ylabel('Frequency')
+plt.ylabel('Number of Employees')
 plt.grid(True)
 plt.tight_layout()
 plt.savefig("salary_distribution.png")
@@ -84,3 +84,10 @@ print(f"Number of records that violate the cities has more than only one employe
 # Print result
 print(f"Number of managers with only one employee reporting to them: {managers_with_one_report}")
 
+mean_salary = statistics.mean(salaries)
+print(f"Average salary: ${mean_salary:,.2f}")
+
+if mean_salary > 60000:
+    print("Valid: Average salary is greater than $60,000.")
+else:
+    print("Invalid: Average salary is not greater than $60,000.")
